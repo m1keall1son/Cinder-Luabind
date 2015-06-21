@@ -24,8 +24,8 @@ lib/winrt/x64/cinder*.lib
 *.ncb
 *.sdf
 *.opensdf
-Debug/
-Release/
+xcode/Debug/
+xcode/Release/
 Debug_ANGLE/
 Release_ANGLE/
 ipch/
