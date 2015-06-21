@@ -17,10 +17,10 @@ namespace lb {
         virtual ~LuaException() throw() {}
     };
     
-    class LuaRuntimeException : public LuaException {
+    class LuaRuntimeException : public luabind::error {
     public:
-        LuaRuntimeException():LuaException(){}
-        LuaRuntimeException( const std::string &description ):LuaException( description ){}
+        LuaRuntimeException( lua_State * state ):luabind::error( state ){}
+        virtual const char* what() const throw() { return std::string( std::string("lua runtime error: ") + lua_tostring(state(), -1) ).c_str();  }
         virtual ~LuaRuntimeException() throw() {}
     };
     

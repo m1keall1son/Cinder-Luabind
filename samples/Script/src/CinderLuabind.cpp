@@ -53,10 +53,8 @@ void lb::Context::runLuaScript( const std::string &str )
     ///collect garbage
     lua_gc(mState->getLuaState(), LUA_GCCOLLECT, 0);
     
-    try {
-        luaL_dostring(mState->getLuaState(), str.c_str());
-    } catch (const luabind::error &e) {
-        throw LuaCompileException(e.what());
+    if(luaL_dostring(mState->getLuaState(), str.c_str()) != 0){
+        throw LuaCompileException( lua_tostring(mState->getLuaState(), -1) );
     }
     
 }

@@ -26,6 +26,8 @@
 		3AABB9CFB8274FA79C2F64B6 /* ldump.c in Sources */ = {isa = PBXBuildFile; fileRef = 46385CB0B5C04CFF86EEA7B4 /* ldump.c */; };
 		3FE584A63DF647CF896E961D /* lopcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D5412E86DD8470A82ADF30F /* lopcodes.c */; };
 		4F7771271B36008C00FE5230 /* CinderLuabind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F7771251B36008C00FE5230 /* CinderLuabind.cpp */; };
+		4F77712B1B36956200FE5230 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4F7771291B36956200FE5230 /* test.lua */; };
+		4F77712C1B36956200FE5230 /* test2.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4F77712A1B36956200FE5230 /* test2.lua */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		5403BA148E6446898B32FC8D /* lmathlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 943C1B9B5C4448378461F21B /* lmathlib.c */; };
 		72FFEB5B2D3B40A5A52F530E /* lstate.c in Sources */ = {isa = PBXBuildFile; fileRef = 643C7D47A8A84B02B04B6B4E /* lstate.c */; };
@@ -160,6 +162,8 @@
 		4F7771241B35EF8B00FE5230 /* yield_policy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = yield_policy.hpp; sourceTree = "<group>"; };
 		4F7771251B36008C00FE5230 /* CinderLuabind.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CinderLuabind.cpp; path = ../src/CinderLuabind.cpp; sourceTree = "<group>"; };
 		4F7771261B36008C00FE5230 /* CinderLuabind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderLuabind.h; path = ../src/CinderLuabind.h; sourceTree = "<group>"; };
+		4F7771291B36956200FE5230 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
+		4F77712A1B36956200FE5230 /* test2.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test2.lua; sourceTree = "<group>"; };
 		50147BD855534591BA63BEF7 /* llex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = llex.h; path = ../../../include/lua/llex.h; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		5DF835A7A3D04FF786DBE6E3 /* liolib.c */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = liolib.c; path = ../../../include/lua/liolib.c; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 		29B97314FDCFA39411CA2CEA /* Script */ = {
 			isa = PBXGroup;
 			children = (
+				4F7771281B36956200FE5230 /* assets */,
 				01B97315FEAEA392516A2CEA /* Blocks */,
 				29B97315FDCFA39411CA2CEA /* Headers */,
 				080E96DDFE201D6D7F000001 /* Source */,
@@ -484,6 +489,16 @@
 			path = detail;
 			sourceTree = "<group>";
 		};
+		4F7771281B36956200FE5230 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				4F7771291B36956200FE5230 /* test.lua */,
+				4F77712A1B36956200FE5230 /* test2.lua */,
+			);
+			name = assets;
+			path = ../assets;
+			sourceTree = "<group>";
+		};
 		F96F416DC13B445C9FDA8EDB /* luabind */ = {
 			isa = PBXGroup;
 			children = (
@@ -544,7 +559,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F77712B1B36956200FE5230 /* test.lua in Resources */,
 				DA8415B9D5F84AA2834833F6 /* CinderApp.icns in Resources */,
+				4F77712C1B36956200FE5230 /* test2.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
