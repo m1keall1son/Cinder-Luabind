@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cinder>
+<block
+	name="luabind"
+	id="luabind.libcinder.org"
+	author="Mike Allison"
+	license="Apache 2.0, LGPL"
+	library="http://www.lua.org"
+	summary="Wraps Luabind and Lua scripting for Cinder."
+	>
+    <supports os="macosx" />
+	<includePath>include</includePath>
+    <includePath>include/luabind</includePath>
+    <includePath>include/luabind/detail</includePath>
+    <includePath>include/lua</includePath>
+    <sourcePattern>include/lua/*.c</sourcePattern>
+    <sourcePattern>include/lua/*.cpp</sourcePattern>
+    <headerPattern>include/luabind/*.hpp</headerPattern>
+    <headerPattern>include/luabind/detail/*.hpp</headerPattern>
+    <headerPattern>include/lua/*.h</headerPattern>
+    <platform os="macosx">
+        <platform config="debug">
+            <staticLibrary>lib/lua/macosx/liblua.a</staticLibrary>
+            <staticLibrary>lib/luabind/macosx/debug/libluabind.a</staticLibrary>
+        </platform>
+        <platform config="release">
+            <staticLibrary>lib/lua/macosx/liblua.a</staticLibrary>
+            <staticLibrary>lib/luabind/macosx/release/libluabind.a</staticLibrary>
+        </platform>
+    </platform>
+</block>
+</cinder>
