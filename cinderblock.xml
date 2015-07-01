@@ -18,6 +18,8 @@
     <headerPattern>include/luabind/*.hpp</headerPattern>
     <headerPattern>include/luabind/detail/*.hpp</headerPattern>
     <headerPattern>include/lua/*.h</headerPattern>
+    <headerPattern>include/*.h</headerPattern>
+    <sourcePattern>include/*.cpp</sourcePattern>
     <platform os="macosx">
         <platform config="debug">
             <staticLibrary>lib/lua/macosx/liblua.a</staticLibrary>

@@ -1,0 +1,22 @@
+#if defined( __cplusplus )
+
+extern "C"
+{
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+}
+
+#include <luabind/luabind.hpp>
+
+	#include "cinder/Cinder.h"
+	
+	#include "cinder/app/App.h"
+	
+	#include "cinder/gl/gl.h"
+	
+	#include "cinder/CinderMath.h"
+	#include "cinder/Matrix.h"
+	#include "cinder/Vector.h"
+	#include "cinder/Quaternion.h"
+#endif
