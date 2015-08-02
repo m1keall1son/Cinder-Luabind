@@ -23,11 +23,11 @@
     <platform os="macosx">
         <platform config="debug">
             <staticLibrary>lib/lua/macosx/liblua.a</staticLibrary>
-            <staticLibrary>lib/luabind/macosx/debug/libluabind.a</staticLibrary>
+            <staticLibrary>lib/luabind/macosx/x86_64/debug/libluabindd.a</staticLibrary>
         </platform>
         <platform config="release">
             <staticLibrary>lib/lua/macosx/liblua.a</staticLibrary>
-            <staticLibrary>lib/luabind/macosx/release/libluabind.a</staticLibrary>
+            <staticLibrary>lib/luabind/macosx/x86_64/release/libluabind.a</staticLibrary>
         </platform>
     </platform>
 </block>
