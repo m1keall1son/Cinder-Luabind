@@ -13,11 +13,10 @@
     <includePath>include/luabind</includePath>
     <includePath>include/luabind/detail</includePath>
     <includePath>include/lua</includePath>
-    <sourcePattern>include/lua/*.c</sourcePattern>
-    <sourcePattern>include/lua/*.cpp</sourcePattern>
+    <headerPattern>include/lua/*.h</headerPattern>
+    <sourcePattern>include/lua/*.hpp</sourcePattern>
     <headerPattern>include/luabind/*.hpp</headerPattern>
     <headerPattern>include/luabind/detail/*.hpp</headerPattern>
-    <headerPattern>include/lua/*.h</headerPattern>
     <headerPattern>include/*.h</headerPattern>
     <sourcePattern>include/*.cpp</sourcePattern>
     <platform os="macosx">
