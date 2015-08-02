@@ -31,12 +31,13 @@
 #include <luabind/detail/pcall.hpp>
 #include <luabind/error.hpp>
 #include <luabind/detail/stack_utils.hpp>
-#include <luabind/object.hpp> // TODO: REMOVE DEPENDENCY
+#include <luabind/detail/object.hpp> // TODO: REMOVE DEPENDENCY
 
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/facilities/expand.hpp>
+#include <boost/preprocessor/repetition/enum.hpp>
 
 #include <boost/mpl/apply_wrap.hpp>
 
@@ -132,23 +133,21 @@ namespace luabind
 					// pops the return values from the function
 					stack_pop pop(L, lua_gettop(L) - top);
 
-#ifndef LUABIND_NO_ERROR_CHECKING
-
 					if (converter.match(L, LUABIND_DECORATE_TYPE(Ret), -1) < 0)
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
-						throw cast_failed(L, LUABIND_TYPEID(Ret));
+						throw cast_failed(L, typeid(Ret));
 #else
 						cast_failed_callback_fun e = get_cast_failed_callback();
-						if (e) e(L, LUABIND_TYPEID(Ret));
+						if (e) e(L, typeid(Ret));
 
 						assert(0 && "the lua function's return value could not be converted."
 							"If you want to handle this error use luabind::set_error_callback()");
 						std::terminate();
 #endif
 					}
-#endif
+
 					return converter.apply(L, LUABIND_DECORATE_TYPE(Ret), -1);
 				}
 
@@ -186,23 +185,21 @@ namespace luabind
 					// pops the return values from the function
 					stack_pop pop(L, lua_gettop(L) - top);
 
-#ifndef LUABIND_NO_ERROR_CHECKING
-
 					if (converter.match(L, LUABIND_DECORATE_TYPE(Ret), -1) < 0)
 					{
 						assert(lua_gettop(L) == top + 1);
 #ifndef LUABIND_NO_EXCEPTIONS
-						throw cast_failed(L, LUABIND_TYPEID(Ret));
+						throw cast_failed(L, typeid(Ret));
 #else
 						cast_failed_callback_fun e = get_cast_failed_callback();
-						if (e) e(L, LUABIND_TYPEID(Ret));
+						if (e) e(L, typeid(Ret));
 
 						assert(0 && "the lua function's return value could not be converted."
 							"If you want to handle this error use luabind::set_error_callback()");
 						std::terminate();
 #endif
 					}
-#endif
+
 					return converter.apply(L, LUABIND_DECORATE_TYPE(Ret), -1);
 				}
 
@@ -236,7 +233,7 @@ namespace luabind
 					rhs.m_called = true;
 				}
 
-				~proxy_member_void_caller() noexcept(false)
+				~proxy_member_void_caller()
 				{
 					if (m_called) return;
 
@@ -315,7 +312,8 @@ namespace luabind
 
 #endif // LUABIND_CALL_MEMBER_HPP_INCLUDED
 
-#elif BOOST_PP_ITERATION_FLAGS() == 1
+#else
+#if BOOST_PP_ITERATION_FLAGS() == 1
 
 #define LUABIND_TUPLE_PARAMS(z, n, data) const A##n *
 #define LUABIND_OPERATOR_PARAMS(z, n, data) const A##n & a##n
@@ -358,5 +356,6 @@ namespace luabind
 #undef LUABIND_OPERATOR_PARAMS
 #undef LUABIND_TUPLE_PARAMS
 
+#endif
 #endif
 

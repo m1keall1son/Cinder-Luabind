@@ -26,8 +26,12 @@
 #include <luabind/prefix.hpp>
 #include <exception>
 #include <luabind/config.hpp>
+#include <luabind/error_callback_fun.hpp>
+#include <luabind/lua_state_fwd.hpp>
 
-struct lua_State;
+#ifndef LUABIND_NO_EXCEPTIONS
+#include <luabind/typeid.hpp>
+#endif
 
 namespace luabind
 {
@@ -61,19 +65,16 @@ namespace luabind
 	class LUABIND_API cast_failed : public std::exception
 	{
 	public:
-		cast_failed(lua_State* L, LUABIND_TYPE_INFO i): m_L(L), m_info(i) {}
+		cast_failed(lua_State* L, type_id const& i): m_L(L), m_info(i) {}
 		lua_State* state() const throw() { return m_L; }
-		LUABIND_TYPE_INFO info() const throw() { return m_info; }
+		type_id info() const throw() { return m_info; }
 		virtual const char* what() const throw() { return "unable to make cast"; }
 	private:
 		lua_State* m_L;
-		LUABIND_TYPE_INFO m_info;
+		type_id m_info;
 	};
 
 #else
-
-	typedef void(*error_callback_fun)(lua_State*);
-	typedef void(*cast_failed_callback_fun)(lua_State*, LUABIND_TYPE_INFO);
 
 	LUABIND_API void set_error_callback(error_callback_fun e);
 	LUABIND_API void set_cast_failed_callback(cast_failed_callback_fun c);
@@ -82,7 +83,6 @@ namespace luabind
 
 #endif
 
-	typedef int(*pcall_callback_fun)(lua_State*);
 	LUABIND_API void set_pcall_callback(pcall_callback_fun e);
 	LUABIND_API pcall_callback_fun get_pcall_callback();
 

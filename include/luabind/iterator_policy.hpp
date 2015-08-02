@@ -5,11 +5,15 @@
 #ifndef LUABIND_ITERATOR_POLICY__071111_HPP
 # define LUABIND_ITERATOR_POLICY__071111_HPP
 
-# include <luabind/config.hpp>
-# include <luabind/detail/policy.hpp>
-# include <luabind/detail/convert_to_lua.hpp>
+# include <luabind/config.hpp>           // for LUABIND_ANONYMOUS_FIX
+# include <luabind/detail/convert_to_lua.hpp>  // for convert_to_lua
+# include <luabind/detail/policy.hpp>    // for index_map, etc
+
+# include <new>                          // for operator new
 
 namespace luabind { namespace detail {
+
+struct null_type;
 
 template <class Iterator>
 struct iterator
@@ -34,8 +38,7 @@ struct iterator
 
     static int destroy(lua_State* L)
     {
-        iterator* self = static_cast<iterator*>(
-            lua_touserdata(L, lua_upvalueindex(1)));
+        iterator* self = static_cast<iterator*>(lua_touserdata(L, 1));
         self->~iterator();
         return 0;
     }
@@ -70,7 +73,6 @@ int make_range(lua_State* L, Container& container)
 
 struct iterator_converter
 {
-    typedef boost::mpl::bool_<false> is_value_converter;
     typedef iterator_converter type;
 
     template <class Container>

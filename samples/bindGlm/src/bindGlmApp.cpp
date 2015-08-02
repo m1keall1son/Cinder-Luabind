@@ -65,6 +65,33 @@ public:
 class Object {
 public:
     Object( const vec3 & startingPos ):mModelMatrix( ci::translate(startingPos) ) {}
+    Object( const luabind::object& lua_init ){
+        
+        mat4 translation = ci::translate( vec3(0) );
+        mat4 rotation = mat4(1);
+        mat4 scale = ci::scale( vec3(1) );
+        
+//        for (luabind::iterator i( lua_init ), end; i != end; ++i ) {
+//            
+//            std::string init_key = luabind::object_cast<std::string>( i.key() );
+//            
+//            if( init_key == "translation" ){
+//                translation = ci::translate( luabind::object_cast<ci::vec3>(*i) );
+//            }else if( init_key == "rotation" ){
+//                rotation = luabind::object_cast<ci::mat4>( *i );
+//            }else if( init_key == "scale" ){
+//                scale = ci::scale( luabind::object_cast<ci::vec3>(*i) );
+//            }
+//            
+//        }
+
+        translation = ci::translate(luabind::object_cast<ci::vec3>( lua_init["translation"] ));
+        
+        mModelMatrix = translation;
+        mModelMatrix *= rotation;
+        mModelMatrix *= scale;
+    
+    }
     mat4& getMatrix(){ return mModelMatrix; }
     void setMatrix( const ci::mat4 &mat ){ mModelMatrix = mat; }
     
@@ -125,6 +152,7 @@ void ScriptApp::setup()
         [
          class_< Object >("Object")
          .def( constructor<const ci::vec3&>() )
+         .def( constructor<const luabind::object&>() )
          .def( "getMatrix", &Object::getMatrix )
          .def( "setMatrix", &Object::setMatrix ),
          class_< ObjectManager >("ObjectManager")

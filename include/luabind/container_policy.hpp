@@ -25,8 +25,12 @@
 #define LUABIND_CONTAINER_POLICY_HPP_INCLUDED
 
 #include <luabind/config.hpp>
-#include <luabind/detail/policy.hpp>
+#include <luabind/detail/policy.hpp>    // for policy_cons, etc
+#include <luabind/detail/decorate_type.hpp>  // for LUABIND_DECORATE_TYPE
+#include <luabind/detail/primitives.hpp>  // for null_type (ptr only), etc
 #include <boost/mpl/apply_wrap.hpp>
+#include <boost/mpl/if.hpp>             // for if_
+#include <boost/type_traits/is_same.hpp>  // for is_same
 
 namespace luabind { namespace detail {
 
@@ -35,7 +39,12 @@ namespace luabind { namespace detail {
 	template<class Policies>
 	struct container_converter_lua_to_cpp
 	{
-		template<class T>
+        int consumed_args(...) const
+        {
+            return 1;
+        }
+
+        template<class T>
 		T apply(lua_State* L, by_const_reference<T>, int index)
 		{
 			typedef typename T::value_type value_type;

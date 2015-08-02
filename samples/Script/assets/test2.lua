@@ -1,12 +1,13 @@
 class 'script' (Scriptable)
 
 function script:__init( name )
-    super( name )
+    Scriptable.__init( self, self, name )
     self.counter = 0
 end
 
 function script:setup()
     print( "setup: ", self.mName )
+    sayHi()
 end
 
 function script:update()

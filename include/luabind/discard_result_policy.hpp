@@ -25,7 +25,13 @@
 #define LUABIND_DISCARD_RESULT_POLICY_HPP_INCLUDED
 
 #include <luabind/config.hpp>
-#include <luabind/detail/policy.hpp>
+#include <luabind/detail/policy.hpp>    // for index_map, etc
+#include <luabind/detail/primitives.hpp>  // for null_type, etc
+
+#include <boost/mpl/if.hpp>             // for if_
+#include <boost/type_traits/is_same.hpp>  // for is_same
+
+#include <luabind/lua_include.hpp>
 
 namespace luabind { namespace detail 
 {
@@ -56,10 +62,16 @@ namespace luabind { namespace detail
 
 namespace luabind
 {
-	namespace 
-	{
-		LUABIND_ANONYMOUS_FIX detail::policy_cons<detail::discard_result_policy, detail::null_type> discard_result;
-	}
+  detail::policy_cons<
+      detail::discard_result_policy, detail::null_type> const discard_result = {};
+
+  namespace detail
+  {
+    inline void ignore_unused_discard_result()
+    {
+        (void)discard_result;
+    }
+  }
 }
 
 #endif // LUABIND_DISCARD_RESULT_POLICY_HPP_INCLUDED

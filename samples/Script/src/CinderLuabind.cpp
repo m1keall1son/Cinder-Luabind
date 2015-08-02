@@ -8,6 +8,7 @@
 
 #include "CinderLuabind.h"
 #include "cinder/Utilities.h"
+#include "cinder/Log.h"
 
 namespace lb {
 
@@ -40,7 +41,36 @@ ContextRef Context::create( const std::string &name )
     return ContextRef( new Context( name ) );
 }
 
-Context::Context( const std::string &name ):mName(name),mState( State::create(this) ){}
+Context::Context( const std::string &name ):mName(name),mState( State::create(this) ){
+
+    std::string packagePath = "package.path = \'";
+    
+    std::string stream;
+    stream = "Cinder-Luabind adding lua 'require' paths \n";
+    
+    for( auto & path : ci::app::getAssetDirectories() ){
+        
+        stream += path.string() + "\n";
+        
+        packagePath += path.string()+"/?;";
+        packagePath += path.string()+"/?.lua;";
+
+    }
+    
+    ///need to add this one, how to get the name??
+//    std::string appResourcePath = ci::app::getAppPath().string() + "/Script.app/Contents/Resources/";
+//    auto p1 = appResourcePath + "?;";
+//    auto p2 = appResourcePath + "?.lua;";
+
+    packagePath += "\' .. package.path";
+    
+    runLuaScript(packagePath);
+    
+    CI_LOG_V( stream );
+    
+
+
+}
 
 void Context::addBindFunction( const BindFn &bindFn )
 {
