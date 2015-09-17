@@ -23,20 +23,6 @@ T* get_pointer(std::shared_ptr<T>& p)
     return p.get();
 }
 
-template<class A>
-std::shared_ptr<const A>*
-get_const_holder(std::shared_ptr<A>*)
-{
-    return 0;
-}
-
-template<class A>
-std::weak_ptr<const A>*
-get_const_holder(std::weak_ptr<A>*)
-{
-    return 0;
-}
-
 using ScriptBaseRef = std::shared_ptr< class ScriptBase >;
 
 static ci::signals::Signal<void(int)> sSignal;
