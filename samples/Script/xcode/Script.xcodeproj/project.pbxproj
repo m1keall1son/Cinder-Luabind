@@ -16,13 +16,12 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
-		4F7771271B36008C00FE5230 /* CinderLuabind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4F7771251B36008C00FE5230 /* CinderLuabind.cpp */; };
-		4F77712B1B36956200FE5230 /* test.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4F7771291B36956200FE5230 /* test.lua */; };
-		4F77712C1B36956200FE5230 /* test2.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4F77712A1B36956200FE5230 /* test2.lua */; };
+		4F77712B1B36956200FE5230 /* CounterScript1.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4F7771291B36956200FE5230 /* CounterScript1.lua */; };
+		4F77712C1B36956200FE5230 /* CounterScript2.lua in Resources */ = {isa = PBXBuildFile; fileRef = 4F77712A1B36956200FE5230 /* CounterScript2.lua */; };
+		4FDE8D111BAF0B3200A282E7 /* CinderLuabind.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4FDE8D0F1BAF0B3200A282E7 /* CinderLuabind.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		95A3278B527D463D9601C51C /* ScriptApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8279CE5425E9461BB168DE50 /* ScriptApp.cpp */; };
-		A268E45C1B45989600D86A48 /* setpath.lua in Resources */ = {isa = PBXBuildFile; fileRef = A268E45B1B45989600D86A48 /* setpath.lua */; };
 		A268E4611B459EA000D86A48 /* require_test.lua in Resources */ = {isa = PBXBuildFile; fileRef = A268E4601B459EA000D86A48 /* require_test.lua */; };
 		DA8415B9D5F84AA2834833F6 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = D5A375E9797C42BFB8D3CD2A /* CinderApp.icns */; };
 /* End PBXBuildFile section */
@@ -40,16 +39,16 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		4F7771251B36008C00FE5230 /* CinderLuabind.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CinderLuabind.cpp; path = ../src/CinderLuabind.cpp; sourceTree = "<group>"; };
-		4F7771261B36008C00FE5230 /* CinderLuabind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderLuabind.h; path = ../src/CinderLuabind.h; sourceTree = "<group>"; };
-		4F7771291B36956200FE5230 /* test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.lua; sourceTree = "<group>"; };
-		4F77712A1B36956200FE5230 /* test2.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test2.lua; sourceTree = "<group>"; };
+		4F7771291B36956200FE5230 /* CounterScript1.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CounterScript1.lua; sourceTree = "<group>"; };
+		4F77712A1B36956200FE5230 /* CounterScript2.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CounterScript2.lua; sourceTree = "<group>"; };
+		4FDE8D0E1BAF0B3200A282E7 /* CinderGlmBindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderGlmBindings.h; path = ../../../include/CinderGlmBindings.h; sourceTree = "<group>"; };
+		4FDE8D0F1BAF0B3200A282E7 /* CinderLuabind.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CinderLuabind.cpp; path = ../../../include/CinderLuabind.cpp; sourceTree = "<group>"; };
+		4FDE8D101BAF0B3200A282E7 /* CinderLuabind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CinderLuabind.h; path = ../../../include/CinderLuabind.h; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		8279CE5425E9461BB168DE50 /* ScriptApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = ScriptApp.cpp; path = ../src/ScriptApp.cpp; sourceTree = "<group>"; tabWidth = 5; };
 		8429C04C744F4579983838CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Script.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Script.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2218FF4411B4DB6AA51CB52 /* Resources.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Resources.h; path = ../include/Resources.h; sourceTree = "<group>"; };
-		A268E45B1B45989600D86A48 /* setpath.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = setpath.lua; sourceTree = "<group>"; };
 		A268E4601B459EA000D86A48 /* require_test.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = require_test.lua; sourceTree = "<group>"; };
 		A2E1B2AA1B4DE2B500284023 /* lauxlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lauxlib.h; sourceTree = "<group>"; };
 		A2E1B2AB1B4DE2B500284023 /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
@@ -176,8 +175,6 @@
 			isa = PBXGroup;
 			children = (
 				8279CE5425E9461BB168DE50 /* ScriptApp.cpp */,
-				4F7771251B36008C00FE5230 /* CinderLuabind.cpp */,
-				4F7771261B36008C00FE5230 /* CinderLuabind.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -261,6 +258,9 @@
 		3869049E31B641FA86B4A1CB /* include */ = {
 			isa = PBXGroup;
 			children = (
+				4FDE8D0E1BAF0B3200A282E7 /* CinderGlmBindings.h */,
+				4FDE8D0F1BAF0B3200A282E7 /* CinderLuabind.cpp */,
+				4FDE8D101BAF0B3200A282E7 /* CinderLuabind.h */,
 				A2E1B2A91B4DE2B500284023 /* lua */,
 				A2E1B2AF1B4DE2B500284023 /* luabind */,
 			);
@@ -271,9 +271,8 @@
 			isa = PBXGroup;
 			children = (
 				A268E45F1B459EA000D86A48 /* subdir */,
-				4F7771291B36956200FE5230 /* test.lua */,
-				4F77712A1B36956200FE5230 /* test2.lua */,
-				A268E45B1B45989600D86A48 /* setpath.lua */,
+				4F7771291B36956200FE5230 /* CounterScript1.lua */,
+				4F77712A1B36956200FE5230 /* CounterScript2.lua */,
 			);
 			name = assets;
 			path = ../assets;
@@ -458,11 +457,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A268E45C1B45989600D86A48 /* setpath.lua in Resources */,
-				4F77712B1B36956200FE5230 /* test.lua in Resources */,
+				4F77712B1B36956200FE5230 /* CounterScript1.lua in Resources */,
 				DA8415B9D5F84AA2834833F6 /* CinderApp.icns in Resources */,
 				A268E4611B459EA000D86A48 /* require_test.lua in Resources */,
-				4F77712C1B36956200FE5230 /* test2.lua in Resources */,
+				4F77712C1B36956200FE5230 /* CounterScript2.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -473,8 +471,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FDE8D111BAF0B3200A282E7 /* CinderLuabind.cpp in Sources */,
 				95A3278B527D463D9601C51C /* ScriptApp.cpp in Sources */,
-				4F7771271B36008C00FE5230 /* CinderLuabind.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

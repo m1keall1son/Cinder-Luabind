@@ -1,6 +1,9 @@
 do
+
     function sayHi()
-        print("hello")
+        print("Hello I came from a required script")
     end
-    saysomething = "it worked"
+
+    saysomething = "This variable was defined by a require script"
+
 end

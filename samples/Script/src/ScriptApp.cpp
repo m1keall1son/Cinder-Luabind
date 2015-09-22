@@ -11,107 +11,54 @@ using namespace luabind; //included before cinder
 
 #include "CinderLuabind.h"
 
-template<class T>
-T* get_pointer(std::weak_ptr<T>& p)
-{
-    return p.lock().get();
-}
-
-template<class T>
-T* get_pointer(std::shared_ptr<T>& p)
-{
-    return p.get();
-}
-
-using ScriptBaseRef = std::shared_ptr< class ScriptBase >;
-
-static ci::signals::Signal<void(int)> sSignal;
-
-struct LuaFunctionHandler
-{
-    LuaFunctionHandler( luabind::object* self, const luabind::object& obj)
-    : m_func(obj),_self(self)
-    {
-        if (luabind::type(obj) != LUA_TFUNCTION) {
-            throw std::invalid_argument("invalid lua object");
-        }
-    }
-    
-    void operator()(int i)
-    {
-        try{
-            luabind::call_function<void>(m_func, *_self, i);
-        }catch( const luabind::error &e )
-        {
-            console() << e.what() << " : " << lua_tostring(e.state(), -1) << endl;
-        }
-    }
-    
-    // ... bunch of more overloads for operator()
-    
-private:
-    luabind::object m_func;
-    luabind::object* _self;
-};
-
+static cinder::signals::Signal< void(int) > sEventSignal;
 
 class ScriptBase {
 public:
     ScriptBase( const luabind::object &self, const std::string &name ):mName(name), _self(self){}
+    
     virtual void setup(){};
     virtual void update(){};
+    
     std::string mName;
+    
+    //! allows passing of an arbitrary lua member function from the derived class which can then be hooked into a signal or stored for use whenever
     virtual void connectFunction( const std::string &name ){
-        mFunctions.push_back(LuaFunctionHandler( &_self, _self[name] ));
-        std::function<void(int)> fn = std::bind(&LuaFunctionHandler::operator(), &mFunctions.back(), std::placeholders::_1);
-        sSignal.connect(fn);
+	   
+        mFunctions.push_back( ci::lb::FunctionHandler( &_self, _self[name] ) );
+	   
+	   std::function<void(int)> fn = std::bind(
+									   (void(ci::lb::FunctionHandler::*)(int))&ci::lb::FunctionHandler::operator(), //have to specialize the overload
+									   &mFunctions.back(),
+									   std::placeholders::_1
+									   );
+	   
+	   mConnections.push_back( sEventSignal.connect(fn) );
+	   
     }
     
-    virtual ~ScriptBase(){}
-    std::vector<LuaFunctionHandler> mFunctions;
+    virtual ~ScriptBase(){
+	   for( auto & connection : mConnections )connection.disconnect();
+    }
+    
+    std::vector<ci::lb::FunctionHandler> mFunctions;
+    std::vector< signals::Connection > mConnections;
     
 private:
     luabind::object _self;
     
 };
 
-class ScriptBaseWrapper : public ScriptBase, public luabind::wrap_base {
-    
-public:
-    
-    ScriptBaseWrapper( const luabind::object &self, const std::string &name):ScriptBase(self,name){}
-    
-    virtual void update() override
-    {
-        try{
-            call<void>("update");
-        }catch( const luabind::error &e )
-        {
-            console() << e.what() << " : " << lua_tostring(e.state(), -1) << endl;
-        }
-    }
-    
-    virtual void setup() override
-    {
-        try{
-            call<void>("setup");
-        }catch( const luabind::error &e )
-        {
-            console() << e.what() << " : " << lua_tostring(e.state(), -1) << endl;
-        }
-    }
-    
-    static void default_update(ScriptBase* ptr)
-    {
-        return ptr->ScriptBase::update();
-    }
-    
-    static void default_setup(ScriptBase* ptr)
-    {
-        return ptr->ScriptBase::setup();
-    }
-    
-};
+//! wrap the base class to allow extending ScriptBase on the lua side
+
+LB_WRAP_BASE_BEGIN(ScriptBase);
+LB_WRAP_BASE_CONSTRUCTOR_ARGS(ScriptBase, (const luabind::object &) self, (const std::string &) name );
+LB_WRAP_BASE_VIRTUAL_FN(ScriptBase, void, setup);
+LB_WRAP_BASE_VIRTUAL_FN(ScriptBase, void, update);
+LB_WRAP_BASE_END();
+
+
+///COUNTING OBJECTS///
 
 using CounterRef = std::shared_ptr<class Counter>;
 
@@ -137,8 +84,6 @@ private:
     friend class CounterManager;
 };
 
-using CounterWeakRef = std::weak_ptr<Counter>;
-
 class CounterManager {
 public:
     
@@ -150,10 +95,12 @@ public:
     void decCounters(){ for(auto&c:mCounters)c->dec(); }
     void printCounters(){ for(auto&c:mCounters)c->print(); }
     void removeCounter( int index){ auto it = mCounters.begin(); std::advance( it , index); mCounters.erase( it ); }
+    void clear(){ mCounters.clear(); }
 
 private:
     std::vector<CounterRef> mCounters;
 };
+
 
 class ScriptApp : public App {
   public:
@@ -161,44 +108,65 @@ class ScriptApp : public App {
 	void mouseDown( MouseEvent event ) override;
 	void update() override;
 	void draw() override;
+     void reloadScripts();
     
     lb::ContextRef mLuaContext;
     CounterManager mCounterManager;
-    ScriptBase* mScript1;
-    ScriptBase* mScript2;
+    ScriptBase* mCounterScript1;
+    ScriptBase* mCounterScript2;
     int mInc;
 };
 
+void ScriptApp::reloadScripts()
+{
+    try{
+	   mLuaContext->runLuaScript( loadAsset("CounterScript1.lua") );
+    }catch( const ci::lb::LuaException &e )
+    {
+	   console() << e.what() << endl;
+    }
+    
+    try{
+	   mLuaContext->runLuaScript( loadAsset("CounterScript2.lua") );
+    }catch( const ci::lb::LuaException &e )
+    {
+	   console() << e.what() << endl;
+    }
+    
+    mLuaContext->setGlobal( "manager", &mCounterManager );
+    
+    mCounterScript1 = mLuaContext->getGlobal<ScriptBase*>("mCounterScript1");
+    mCounterScript2 = mLuaContext->getGlobal<ScriptBase*>("mCounterScript2");
+    
+    mCounterScript1->setup();
+    mCounterScript2->setup();
+}
 
 void ScriptApp::setup()
 {
     
-    mLuaContext = lb::Context::create("main context");
+    mLuaContext = ci::lb::Context::create("main context");
     
-    std::function<void(lua_State*)> scriptBaseBind = [&]( lua_State* state ){
-        module(state)
-        [
-         class_< ScriptBase, ScriptBaseWrapper >("Scriptable")
+    luabind::module( mLuaContext->getState() )
+    [
+         class_< ScriptBase, LB_WRAP_BASE_GET(ScriptBase) >("ScriptBase")
          .def( luabind::constructor<const luabind::object&,const std::string&>() )
-         .def_readwrite("mName", &ScriptBase::mName)
-         .def("connectFunction", &ScriptBase::connectFunction)
-         .def( "update", &ScriptBase::update, &ScriptBaseWrapper::default_update )
-         .def( "setup", &ScriptBase::setup, &ScriptBaseWrapper::default_setup )
-         ];
-    };
-    
-    std::function<void(lua_State*)> counterBind = [&]( lua_State* state ){
-        module(state)
-        [
-         
+         .def_readwrite( "mName", &ScriptBase::mName)
+         .def( "connectFunction", &ScriptBase::connectFunction)
+         .def( "update", &ScriptBase::update, &LB_WRAP_BASE_GET_DEFAULT_FN(ScriptBase, update) )
+         .def( "setup", &ScriptBase::setup, &LB_WRAP_BASE_GET_DEFAULT_FN(ScriptBase, setup) ),
+	
+	    //! explicitly tell lua to handle Counters as shared pointers inside lua
          class_< Counter, CounterRef >("Counter")
          .def( luabind::constructor<int, int>() )
          .def( "inc", &Counter::inc )
          .def( "dec", &Counter::dec )
          .def( "print", &Counter::print )
+	   //! static class functions are declared as a scope on a luabind::class_
          .scope[
                 def( "create", &Counter::create )
          ],
+	
          class_< CounterManager >("CounterManager")
          .def( luabind::constructor<>() )
          .def( "incCounters", &CounterManager::incCounters )
@@ -207,34 +175,13 @@ void ScriptApp::setup()
 	    .def( "getCounter", &CounterManager::getCounter )
          .def( "addCounter", &CounterManager::addCounter )
          .def( "removeCounter", &CounterManager::removeCounter )
-         ];
-    };
-    
-    mLuaContext->addBindFunction(scriptBaseBind);
-    mLuaContext->addBindFunction(counterBind);
-    mLuaContext->bindAll();
-    
-    try{
-        mLuaContext->runLuaScript( loadAsset("test.lua") );
-    }catch( const lb::LuaCompileException &e )
-    {
-        console() << e.what() << endl;
-    }
-    
-    try{
-        mLuaContext->runLuaScript( loadAsset("test2.lua") );
-    }catch( const lb::LuaCompileException &e )
-    {
-        console() << e.what() << endl;
-    }
-    
-    luabind::globals(mLuaContext->getState())["manager"] = &mCounterManager;
-    
-    mScript1 = mLuaContext->getGlobal<ScriptBase*>("s");
-    mScript2 = mLuaContext->getGlobal<ScriptBase*>("j");
-    
-    mScript1->setup();
-    mScript2->setup();
+	    .def( "clear", &CounterManager::clear )
+
+    ];
+
+    mLuaContext->setGlobal( "manager", &mCounterManager );
+
+    reloadScripts();
     
     mInc = 0;
     
@@ -242,15 +189,20 @@ void ScriptApp::setup()
 
 void ScriptApp::mouseDown( MouseEvent event )
 {
+    reloadScripts();
 }
 
 void ScriptApp::update()
 {
 
     mInc++;
-    sSignal.emit(mInc);
-    mScript1->update();
-    mScript2->update();
+    
+    //! any script can create a function that can hook into this event and receive its input
+    //! even while the app is running after reloading the script
+    sEventSignal.emit(mInc);
+    
+    mCounterScript1->update();
+    mCounterScript2->update();
     
 }
 

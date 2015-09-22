@@ -10,25 +10,43 @@
 #include "cinder/Utilities.h"
 #include "cinder/Log.h"
 
+namespace cinder {
 namespace lb {
 
 StateRef State::create( Context* context ){
     return StateRef( new State(context) );
 }
 
+int defaultLuabindErrorHandler( lua_State* L )
+{
+	// log the error message
+	luabind::object msg( luabind::from_stack( L, -1 ) );
+	std::ostringstream str;
+	str << "lua> run-time error: " << msg;
+	
+	// log the callstack
+	std::string traceback = luabind::call_function<std::string>( luabind::globals(L)["debug"]["traceback"] );
+	str << "\n" << std::string( "lua> " ) + traceback;
+	CI_LOG_E( str.str() );
+	
+	// return unmodified error object
+	return 1;
+}
+	
 State::State( Context* context_name ):mContext(context_name){
     
     mState = luaL_newstate();
     if(!mState){
-        throw LuaException( "Error creating state for context: " + mContext->getName() );
+		throw LuaException( "Error creating state for context: " + mContext->getName() );
     }
     luaL_openlibs( mState );
     luabind::open( mState );
     lua_atpanic(mState, &State::panic);
+	luabind::set_pcall_callback(&defaultLuabindErrorHandler);
 }
 
 int State::panic(lua_State *L){
-    throw LuaException( std::string("Lua Panic: ") + lua_tostring( L, -1 ) );
+    throw LuaException( L, "Lua Panic: " );
     return 0;
 }
 
@@ -49,12 +67,9 @@ Context::Context( const std::string &name ):mName(name),mState( State::create(th
     stream = "Cinder-Luabind adding lua 'require' paths \n";
     
     for( auto & path : ci::app::getAssetDirectories() ){
-        
         stream += path.string() + "\n";
-        
         packagePath += path.string()+"/?;";
         packagePath += path.string()+"/?.lua;";
-        
     }
     
     ///need to add this one, how to get the name??
@@ -70,16 +85,16 @@ Context::Context( const std::string &name ):mName(name),mState( State::create(th
 
 }
 
-void Context::addBindFunction( const BindFn &bindFn )
+void Context::setLuaErrorHandler( int(*handler)(lua_State*) )
 {
-    mBound.push_back( std::make_pair(bindFn, false) );
+	luabind::set_pcall_callback(handler);
 }
 
-void lb::Context::runLuaScript( const std::string &str )
+void Context::runLuaScript( const std::string &str )
 {
-  
+	
     if(luaL_dostring(mState->getLuaState(), str.c_str()) != 0){
-        throw LuaCompileException( lua_tostring(mState->getLuaState(), -1) );
+        throw LuaException( lua_tostring(mState->getLuaState(), -1) );
     }
     
     ///collect garbage
@@ -87,23 +102,10 @@ void lb::Context::runLuaScript( const std::string &str )
     
 }
     
-void lb::Context::runLuaScript( const ci::DataSourceRef &file )
+void Context::runLuaScript( const ci::DataSourceRef &file )
 {
     runLuaScript( ci::loadString(file) );
 }
 
-void Context::bindAll()
-{
-    for( auto & p : mBound){
-        if(!p.second){
-            try {
-                p.first( mState->getLuaState() );
-            } catch (const luabind::error &e) {
-                throw LuaException( e.what() );
-            }
-            p.second = true;
-        }
-    }
-}
-
-}
+} //end namespace lb
+} //end namespace cinder

@@ -1,1 +1,0 @@
-package.path = '/Users/staff/Documents/Cinder/blocks/Luabind/samples/Script/assets/?;/Users/staff/Documents/Cinder/blocks/Luabind/samples/Script/assets/?.lua;' .. package.path
